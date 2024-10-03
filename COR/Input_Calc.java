@@ -14,29 +14,27 @@ public static void main(String[] args) {
                 double d = a+b ;
                 System.out.println("sum of a and b is :"+d);
             
-                 } else {
-             if ("-".equals(c)) {
+                 } else if ("-".equals(c)) {
                          double d = a-b ;
                             System.out.println("diff of a and b is :"+d);
                  }
-    else{
-        if ("*".equals(c)) {
+    else if ("*".equals(c)) {
             double d = a*b ;
                             System.out.println("multiple of a and b is :"+d);
-            
-        } else {
-            if ("/".equals(c)) {
+        }
+         else  if ("/".equals(c)) {
                double d = a/b ;
                 System.out.println("division of a and b is :"+d);
 
             } else {
                 System.out.println("invalid operator");
             }
+            sc.close();
         }
     }
-                }
-    sc.close();
+                
+    
 
-           }
-      }
+        
+    
     
