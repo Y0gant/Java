@@ -3,13 +3,14 @@ import java.util.Scanner;
 public class RockPaperScissor {
 public static void main(String[] args) {
     Scanner Sc = new Scanner(System.in);
+    Random rand = new Random();
 for (int i=0;i<=4;i++)
 { 
     System.out.println("Rock-1 Paper-2 Scissor-3");
     System.out.println("Enter your input: ");
    byte UI = Sc.nextByte();
    int max=3 , min=1;
-   Random rand = new Random();
+   
    int ra = rand.nextInt(max - min + 1) + min;
 
            if (UI == ra){
