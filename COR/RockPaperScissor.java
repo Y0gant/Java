@@ -12,6 +12,12 @@ for (int i=0;i<=4;i++)
    int max=3 , min=1;
    
    int ra = rand.nextInt(max - min + 1) + min;
+   
+   if (UI < 1 || UI > 3) {
+    System.out.println("Invalid input! Please enter 1 for Rock, 2 for Paper, or 3 for Scissor.");
+    i--;  // Decrease the loop counter
+    continue;  // Skip the current iteration
+}
 
            if (UI == ra){
           System.out.println("TIE");
