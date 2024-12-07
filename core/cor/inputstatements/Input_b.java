@@ -1,3 +1,5 @@
+package cor.inputstatements;
+
 import java.util.Scanner;
 
 public class Input_b {
@@ -8,16 +10,16 @@ public class Input_b {
             a = sc.nextInt();
             System.out.println(a);
         }
-    int i=1;
-    do  {
-        System.out.println(a++);
-        i++;
-       
-    }
-    while (i<=100); 
-        
-    
-        }
+        int i = 1;
+        do {
+            System.out.println(a++);
+            i++;
 
         }
+        while (i <= 100);
+
+
+    }
+
+}
     
