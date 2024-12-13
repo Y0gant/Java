@@ -29,6 +29,6 @@ public class Methd2 {
 
         int s = obj1.getCount();
         System.out.println("Number of instances created of this class"+s);
-
+        
     }
 }
