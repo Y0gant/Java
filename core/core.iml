@@ -9,7 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/inputstatements" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/practicequestions" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="23" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
