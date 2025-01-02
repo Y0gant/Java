@@ -6,9 +6,7 @@ public class VarArgsDemo {
         System.out.println(Obj1.varAdd(1, 2, 3, 4, 5, 6, 7, 8, 9));
         Obj1.showSt("java","spring","docker");
         Obj1.showSt("kubernetes","jenkins");
-
     }
-
     public int varAdd(int... n) {
         int sum = 0;
         for (int i : n)
