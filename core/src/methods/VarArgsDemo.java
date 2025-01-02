@@ -13,7 +13,6 @@ public class VarArgsDemo {
         int sum = 0;
         for (int i : n)
             sum = sum + i;
-
         return sum;
     }
 
