@@ -1,7 +1,8 @@
 package src.methods;
 
-
+// instance and static method example
 public class Methd3 {
+    //static method Addn2
     public static int Addn2(int d, int f) {
         int g = (d + f) * 2;
         return g;
@@ -16,7 +17,7 @@ public class Methd3 {
 
 
     }
-
+//Instance method Addn1
     public int Addn1(int a, int b) {
         int c = a + b;
         return c;
