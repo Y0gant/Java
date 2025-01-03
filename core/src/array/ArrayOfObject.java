@@ -1,5 +1,12 @@
 package src.array;
 
+/**
+ * Here we created a constructor of our class ArrayOfObject
+ * which creates a new object each time it is called using
+ * the "new" keyword so that means when assign 1st index
+ * of the reference variable for array of object that is obj1
+ * to it's first index we can then initialize that object with parameters.
+ */
 public class ArrayOfObject {
     int roll_no;
     String name;
