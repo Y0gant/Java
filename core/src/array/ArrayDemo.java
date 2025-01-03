@@ -41,12 +41,11 @@ public class ArrayDemo {
         //using for loop to print all elements of an array
         //enhanced for loop
         // doesn't provide direct access to index of array
-        for(int i:arr4)
+        for (int i : arr4)
             System.out.println(i);
         //normal for loop
-         for( int y=0;y< arr3.length;y++)
-             System.out.println("Element at index "+y+" is:" +arr3[y]);
-         
+        for (int y = 0; y < arr3.length; y++)
+            System.out.println("Element at index " + y + " is:" + arr3[y]);
 
 
     }
