@@ -17,10 +17,10 @@ public class ClsAndObjs {
 
         //obj2 will have its own different values
         ClsAndObjs obj2 = new ClsAndObjs();
-        obj.a = 45;
-        obj.b = 17;
-        obj.sum();
-        obj.sub();
+        obj2.a = 45;
+        obj2.b = 17;
+        obj2.sum();
+        obj2.sub();
 
 
     }
