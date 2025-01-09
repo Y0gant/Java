@@ -33,7 +33,6 @@ public class OddEvenChecker {
         int odd = 0;
         int evensum = 0;
         int oddsum = 0;
-        int count = 0;
         for (int k : a) {
             if (k % 2 == 0) {
                 System.out.print(k + " is:Even ");
