@@ -1,4 +1,4 @@
-package src.practicequestions;/*Problem statement
+package src.practice;/*Problem statement
 
 You have been given a number 'N'. Your task is to find the sum of all even numbers from 1 to 'N' (both inclusive).
 
