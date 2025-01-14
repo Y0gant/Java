@@ -39,6 +39,13 @@ public class Constructor {
         this.name = name;
     }
 
+    // copy constructor
+    Constructor(Constructor obj) {
+        this.name = obj.name;
+        this.age = obj.age;
+        count++;
+    }
+
     //method to print total no of instances created
     public static void get() {
 
@@ -50,8 +57,10 @@ public class Constructor {
         Constructor obj2 = new Constructor(4);
         Constructor obj3 = new Constructor("Hello");
         Constructor obj4 = new Constructor(21, "Harsh");
-        Constructor obj5 = new Constructor();
         System.out.println("Default age in constructor :" + obj4.age + " & default name :" + obj4.name);
+        Constructor obj5 = new Constructor(obj4);
+        System.out.println("Copy constructor values :" + obj4.age + " & :" + obj4.name);
+        Constructor obj = new Constructor();
         get();
     }
 }
