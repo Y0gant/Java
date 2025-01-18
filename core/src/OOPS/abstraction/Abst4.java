@@ -1,4 +1,4 @@
-package src.OOPS.Abstraction;
+package src.OOPS.abstraction;
 
 interface Display {
     void displayData();

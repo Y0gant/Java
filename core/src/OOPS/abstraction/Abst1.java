@@ -1,4 +1,4 @@
-package src.OOPS.Abstraction;
+package src.OOPS.abstraction;
 
 //Abstract class (without implementation)
 abstract class TvRemote {
