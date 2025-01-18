@@ -28,7 +28,7 @@ class Person {
     }
 }
 
-public class encap1 {
+public class Encap1 {
     public static void main(String[] args) {
         Person obj = new Person();
         obj.setAge(21);
