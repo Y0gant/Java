@@ -22,7 +22,7 @@ class Friend extends Person {
 }
 
 //driver class
-public class Polymorphish2 {
+public class Polymorphism2 {
     public static void main(String[] args) {
         Person obj = new Person();
         Person obj2 = new Father();
