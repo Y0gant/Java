@@ -154,15 +154,15 @@ public class EmpManagement {
         int id = scanner.nextInt();
         System.out.println("Salary :");
         int salary = scanner.nextInt();
-        if (role.equals("Manager")) {
+        if (role.equalsIgnoreCase("Manager")) {
             System.out.println("Bonus :");
             int bonus = scanner.nextInt();
             return new Manager(name, id, salary, bonus);
-        } else if (role.equals("Developer")) {
+        } else if (role.equalsIgnoreCase("Developer")) {
             System.out.println("Project Incentives :");
             int incentives = scanner.nextInt();
             return new Developer(name, id, salary, incentives);
-        } else if (role.equals("Intern")) {
+        } else if (role.equalsIgnoreCase("Intern")) {
             return new Intern(name, id, salary);
         } else {
             System.out.println("Invalid Input");
