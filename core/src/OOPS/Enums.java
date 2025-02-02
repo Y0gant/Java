@@ -8,7 +8,7 @@ enum Status {
 
 }
 
-public class enums {
+public class Enums {
     public static void main(String[] args) {
         Status s = Status.Sucess;
         Status[] ss = Status.values();
