@@ -1,4 +1,4 @@
-package src.CollectionFramework.listInterfc;
+package src.collectionframework.listInterfc;
 
 import java.util.ArrayList;
 import java.util.List;
