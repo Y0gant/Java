@@ -85,25 +85,25 @@ public class GenericsExample {
         // 1. Generic Class Example
         Box<Integer> intBox = new Box<>();
         intBox.setValue(10);
-        System.out.println("Box contains: " + intBox.getValue()); // Output: Box contains: 10
+        System.out.println("Box contains: " + intBox.getValue());
 
         Box<String> strBox = new Box<>();
         strBox.setValue("Hello Generics");
-        System.out.println("Box contains: " + strBox.getValue()); // Output: Box contains: Hello Generics
+        System.out.println("Box contains: " + strBox.getValue());
 
         // 2. Generic Method Example
         Integer[] intArr = {1, 2, 3, 4};
         String[] strArr = {"A", "B", "C"};
 
-        GenericMethodExample.printArray(intArr); // Output: 1 2 3 4
-        GenericMethodExample.printArray(strArr); // Output: A B C
+        GenericMethodExample.printArray(intArr);
+        GenericMethodExample.printArray(strArr);
 
         // 3. Bounded Type Parameters Example
         MathUtil<Integer> intUtil = new MathUtil<>(5);
-        System.out.println("Square of 5: " + intUtil.square()); // Output: Square of 5: 25.0
+        System.out.println("Square of 5: " + intUtil.square());
 
         MathUtil<Double> doubleUtil = new MathUtil<>(4.5);
-        System.out.println("Square of 4.5: " + doubleUtil.square()); // Output: Square of 4.5: 20.25
+        System.out.println("Square of 4.5: " + doubleUtil.square());
 
         // 4. Wildcards in Generics
         List<Integer> intList = Arrays.asList(1, 2, 3);
@@ -111,20 +111,21 @@ public class GenericsExample {
         List<Number> numList = new ArrayList<>();
 
         // Unbounded Wildcard
-        WildcardExample.printList(intList);   // Output: 1 2 3
-        WildcardExample.printList(doubleList); // Output: 1.1 2.2 3.3
+        WildcardExample.printList(intList);
+        WildcardExample.printList(doubleList);
 
         // Upper Bounded Wildcard
-        System.out.println("Sum of intList: " + WildcardExample.sum(intList)); // Output: Sum of intList: 6.0
-        System.out.println("Sum of doubleList: " + WildcardExample.sum(doubleList)); // Output: Sum of doubleList: 6.6
+        System.out.println("Sum of intList: " + WildcardExample.sum(intList));
+        System.out.println("Sum of doubleList: " + WildcardExample.sum(doubleList));
 
         // Lower Bounded Wildcard
         WildcardExample.addNumbers(numList);
-        System.out.println("Numbers added to numList: " + numList); // Output: Numbers added to numList: [10, 20]
+        System.out.println("Numbers added to numList: " + numList);
+
 
         // 5. Generic Interface
         GenericInterface<String> stringPrinter = new StringPrinter();
-        stringPrinter.display("Hello from Generic Interface!"); // Output: Data: Hello from Generic Interface!
+        stringPrinter.display("Hello from Generic Interface!");
     }
 }
 
