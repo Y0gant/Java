@@ -28,6 +28,26 @@ public class ReverseStr {
             reverse = reverse.concat(ch2);
         }
         System.out.println(reverse);
+
+        System.out.println("Using 2 pointer method :");
+        System.out.println(reverseString(input));
+
+    }
+
+    public static String reverseString(String str) {
+        if (str.isEmpty()) {
+            return null;
+        }
+        char[] ch = str.toCharArray();
+        int start = 0, end = str.length() - 1;
+        while (start < end) {
+            char temp = ch[start];
+            ch[start] = ch[end];
+            ch[end] = temp;
+            start++;
+            end--;
+        }
+        return new String(ch);
     }
 
 }
