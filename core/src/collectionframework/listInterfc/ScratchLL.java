@@ -13,7 +13,7 @@ class LL {
         return size;
     }
 
-    //Method to display the linked list
+    // Display the linked list
     public void displayLL() {
         Node temp = head;
         while (temp != null) {
@@ -23,25 +23,31 @@ class LL {
         System.out.println("END");
     }
 
-    //Find particular value
+    // Find a particular value
     public Node find(int value) {
         Node node = head;
-        while (node.data != value) {
+        while (node != null) { // Check for null to prevent infinite loop
+            if (node.data == value) {
+                return node;
+            }
             node = node.next;
         }
-        return node;
+        return null; // Return null if value not found
     }
 
-    //Find a particular node
+    // Get reference to node at given index
     public Node getReference(int index) {
+        if (index < 0 || index >= size) { // Prevent out-of-bounds access
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
         Node node = head;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i < index; i++) { // Loop correctly
             node = node.next;
         }
         return node;
     }
 
-    //Method to insert at beginning of the list
+    // Insert at beginning
     public void insertAtStart(int value) {
         Node node = new Node(value);
         node.next = head;
@@ -52,7 +58,7 @@ class LL {
         size++;
     }
 
-    //Method to insert data at end using tail O(1)
+    // Insert at end using tail O(1)
     public void insertAtEnd(int value) {
         if (tail == null) {
             insertAtStart(value);
@@ -64,8 +70,11 @@ class LL {
         size++;
     }
 
-    //Insert in between of two nodes
+    // Insert at specific index
     public void insertAt(int value, int index) {
+        if (index < 0 || index > size) { // Check bounds
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
         if (index == 0) {
             insertAtStart(value);
             return;
@@ -74,17 +83,17 @@ class LL {
             insertAtEnd(value);
             return;
         }
-        Node temp = head;
-        for (int i = 0; i < index; i++) {
-            temp = temp.next;
-        }
+        Node temp = getReference(index - 1);
         Node node = new Node(value, temp.next);
         temp.next = node;
         size++;
     }
 
-    //Delete node from beginning
+    // Delete first node
     public int deleteFirst() {
+        if (head == null) {
+            throw new IllegalStateException("List is empty");
+        }
         int val = head.data;
         head = head.next;
         if (head == null) {
@@ -94,7 +103,7 @@ class LL {
         return val;
     }
 
-    //Delete the last node
+    // Delete last node
     public int deleteLast() {
         if (size <= 1) {
             return deleteFirst();
@@ -107,17 +116,19 @@ class LL {
         return val;
     }
 
-    //Delete node at particular index
+    // Delete at specific index
     public int deleteAt(int index) {
-        if (index == 0) {
-            deleteFirst();
-
+        if (index < 0 || index >= size) { // Check bounds
+            throw new IndexOutOfBoundsException("Index out of bounds");
         }
-        if (index == size) {
-            deleteLast();
+        if (index == 0) {
+            return deleteFirst();
+        }
+        if (index == size - 1) {
+            return deleteLast();
         }
         Node prev = getReference(index - 1);
-        int val = prev.data;
+        int val = prev.next.data;
         prev.next = prev.next.next;
         size--;
         return val;
@@ -125,7 +136,6 @@ class LL {
 
     private static class Node {
         private int data;
-
         private Node next;
 
         public Node(int data) {
@@ -143,34 +153,31 @@ public class ScratchLL {
     public static void main(String[] args) {
         LL linky = new LL();
 
-        //Inserting element at start
+        // Inserting at start
         linky.insertAtStart(10);
 
-        //Inserting elements at ending
+        // Inserting at end
         linky.insertAtEnd(20);
         linky.insertAtEnd(30);
         linky.insertAtEnd(40);
         linky.insertAtEnd(50);
         linky.insertAtEnd(60);
 
-        //method to dislplay linked list
+        // Display linked list
         linky.displayLL();
 
-        //Insert at particular index
+        // Insert at index 3
         linky.insertAt(80, 3);
         linky.displayLL();
 
-        //Deletion operations
+        // Deletion operations
+        System.out.println("Value deleted from beginning: " + linky.deleteFirst() + " Size: " + linky.getSize());
+        linky.displayLL();
 
-        //From beginning
-        System.out.println("Value deleted from beginning :" + linky.deleteFirst() + " Size :" + linky.getSize());
+        System.out.println("Value deleted from ending: " + linky.deleteLast() + " Size: " + linky.getSize());
         linky.displayLL();
-        //From ending
-        System.out.println("Value deleted from ending :" + linky.deleteLast() + " Size :" + linky.getSize());
-        linky.displayLL();
-        //At particular index
-        System.out.println("Value deleted from index 4 :" + linky.deleteAt(3) + " Size :" + linky.getSize());
+
+        System.out.println("Value deleted from index 3: " + linky.deleteAt(3) + " Size: " + linky.getSize());
         linky.displayLL();
     }
-
 }
