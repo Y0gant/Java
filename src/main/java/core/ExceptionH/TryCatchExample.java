@@ -1,6 +1,6 @@
 package core.ExceptionH;
 
-public class ExceptionEx1 {
+public class TryCatchExample {
     public static void main(String[] args) {
         int[] num = {10, 20, 30, 40, 50};
         int[] den = {2, 3, 0, 6, 5};
