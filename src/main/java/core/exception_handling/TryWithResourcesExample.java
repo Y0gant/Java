@@ -1,4 +1,4 @@
-package core.ExceptionH;
+package core.exception_handling;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,7 +8,7 @@ public class TryWithResourcesExample {
     public static void main(String[] args) {
         String fileName = "sample.txt";
 
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = br.readLine()) != null) {

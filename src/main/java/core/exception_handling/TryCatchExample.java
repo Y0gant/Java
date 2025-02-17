@@ -1,4 +1,4 @@
-package core.ExceptionH;
+package core.exception_handling;
 
 public class TryCatchExample {
     public static void main(String[] args) {

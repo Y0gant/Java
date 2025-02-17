@@ -1,4 +1,4 @@
-package core.ExceptionH;
+package core.exception_handling;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

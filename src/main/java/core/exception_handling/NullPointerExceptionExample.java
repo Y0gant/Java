@@ -1,4 +1,4 @@
-package core.ExceptionH;
+package core.exception_handling;
 
 public class NullPointerExceptionExample {
     public static void main(String[] args) {
