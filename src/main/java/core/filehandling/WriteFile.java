@@ -31,7 +31,7 @@ public class WriteFile {
     public void writeToFile(File file) {
         System.out.println("Enter text to write into the file :");
         written = sc.nextLine();
-        try (FileWriter writer = new FileWriter(file);) {
+        try (FileWriter writer = new FileWriter(file)) {
             writer.write(written);
             System.out.println("Successfully wrote into the file");
 
