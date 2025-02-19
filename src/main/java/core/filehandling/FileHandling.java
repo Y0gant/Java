@@ -34,7 +34,7 @@ public class FileHandling {
             System.out.println("Data written using FileOutputStream.");
 
             try (OutputStreamWriter osWriter = new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8)) {
-                osWriter.write("This text is written using OutputStreamWriter 🌍.\n");
+                osWriter.append("This text is written using OutputStreamWriter 🌍.\n");
                 System.out.println("✅ Data written using OutputStreamWriter.");
             }
 
