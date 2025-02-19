@@ -1,14 +1,14 @@
 package core.filehandling;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 public class FileHandling {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String filepath = "example.txt";
 
-        try {
+        try (Scanner scanner = new Scanner(System.in)) {
+            String filepath = "example.txt";
             File file = new File(filepath);
             if (file.createNewFile()) {
                 System.out.println("File created " + file.getName());
@@ -33,6 +33,11 @@ public class FileHandling {
             fos.close();
             System.out.println("Data written using FileOutputStream.");
 
+            try (OutputStreamWriter osWriter = new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8)) {
+                osWriter.write("This text is written using OutputStreamWriter 🌍.\n");
+                System.out.println("✅ Data written using OutputStreamWriter.");
+            }
+
             FileReader reader = new FileReader(file);
             System.out.println("\n File Content (Using FileReader):");
             int ch;
@@ -49,6 +54,13 @@ public class FileHandling {
                 System.out.println(line);
             }
             bufferedReader.close();
+
+
+            System.out.print("\n⌨️ Enter some text (using InputStreamReader): ");
+            try (InputStreamReader inputStreamReader = new InputStreamReader(System.in)) {
+                int inputChar = inputStreamReader.read();
+                System.out.println("You typed: " + (char) inputChar);
+            }
 
 
             System.out.println("\n File Properties:");
@@ -73,8 +85,10 @@ public class FileHandling {
             File directory = new File(".");
             System.out.println("Files in current directory :");
             String[] files = directory.list();
-            for (String f : files) {
-                System.out.println(f);
+            if (files != null) {
+                for (String f : files) {
+                    System.out.println(f);
+                }
             }
 
 
@@ -91,8 +105,6 @@ public class FileHandling {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            scanner.close();
         }
 
 
