@@ -15,6 +15,8 @@ public class FileInputStreamExample {
 
             fi.skip(4);
 
+            System.out.println("Size of file " + fi.available() + " bytes");
+
             System.out.println("File contents :");
 
             int ch;
