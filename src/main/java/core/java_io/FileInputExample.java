@@ -9,7 +9,7 @@ public class FileInputExample {
         try {
             System.out.println("Enter your name :");
             String str = buffReader.readLine();
-            System.out.println("Heyy " + str);
+            System.out.println("Hey!! " + str);
 
             //explicit parsing for numeric input
             int num = Integer.parseInt(buffReader.readLine());
@@ -66,8 +66,7 @@ public class FileInputExample {
         DataInputStream dis = new DataInputStream(System.in);
         try {
             System.out.print("Enter an integer: ");
-            int num = 0;
-            num = Integer.parseInt(dis.readUTF());
+            int num = Integer.parseInt(dis.readUTF());
             System.out.print("Enter a string: ");
             String str = dis.readUTF();
             System.out.println("You entered integer: " + num);
