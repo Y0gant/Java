@@ -83,7 +83,9 @@ public class ThreadMethods extends Thread {
 
         ThreadMethodsExample t1 = new ThreadMethodsExample();
         t1.start(); // Start new thread
+        System.out.println("Is thread still alive ?" + t1.isAlive());
         t1.join(); // Wait for current thread to finish
+        System.out.println("Is thread still alive ?" + t1.isAlive());
         System.out.println("Continuation of main thread after the previous thread is finished..");
 
         PriorityChecker highPriority = new PriorityChecker("Thread 1");
