@@ -2,17 +2,10 @@ package core.synchronization;
 
 class Counter {
     private int count = 0;
-    private int count2 = 0;
 
-    public int getCount2() {
-        return count2;
+    public void nonSyncIncrement() {
+        count++;
     }
-
-
-    public void incrementCount2() {
-        count2++;
-    }
-
 
     public synchronized void increment() {
         /*
@@ -32,7 +25,7 @@ class Counter {
 
 class MyThread extends Thread {
 
-    private Counter counter;
+    private final Counter counter;
 
     public MyThread(Counter counter) {
         this.counter = counter;
@@ -40,8 +33,7 @@ class MyThread extends Thread {
 
     @Override
     public void run() {
-        for (int i = 0; i < 1000; i++) {
-            counter.incrementCount2();
+        for (int i = 0; i < 10000; i++) {
             counter.increment();
         }
     }
@@ -50,6 +42,32 @@ class MyThread extends Thread {
 public class SyncExample1 {
 
     public static void main(String[] args) {
+
+        // Demonstrating non-synchronized method
+        Counter counter2 = new Counter();
+        Thread nt1 = new Thread(() -> {
+            for (int i = 0; i < 10000; i++) {
+                counter2.nonSyncIncrement();
+            }
+        });
+
+        Thread nt2 = new Thread(() -> {
+            for (int i = 0; i < 10000; i++) {
+                counter2.nonSyncIncrement();
+            }
+        });
+        nt1.start();
+        nt2.start();
+
+        try {
+            nt1.join();
+            nt2.join();
+        } catch (InterruptedException e) {
+            System.out.println("Error: " + e);
+        }
+        System.out.println("Expected count (non-synchronized) = 20000 ");
+        System.out.println("Actual count (non-synchronized) = " + counter2.getCount());
+
 
         // Demonstrating synchronized method
         Counter counter1 = new Counter();
@@ -64,23 +82,9 @@ public class SyncExample1 {
         } catch (InterruptedException e) {
             System.out.println("Error: " + e);
         }
-        System.out.println("Expected count (synchronized) = 2000 ");
-        System.out.println("Real count (synchronized) = " + counter1.getCount());
+        System.out.println("Expected count (synchronized) = 20000 ");
+        System.out.println("Actual count (synchronized) = " + counter1.getCount());
 
-        // Demonstrating non-synchronized method
-        Counter counter2 = new Counter();
-        MyThread nt1 = new MyThread(counter2);
-        MyThread nt2 = new MyThread(counter2);
-        nt1.start();
-        nt2.start();
 
-        try {
-            nt1.join();
-            nt2.join();
-        } catch (InterruptedException e) {
-            System.out.println("Error: " + e);
-        }
-        System.out.println("Expected count (non-synchronized) = 2000 (Result may vary)");
-        System.out.println("Real count (non-synchronized) = " + counter2.getCount2());
     }
 }
