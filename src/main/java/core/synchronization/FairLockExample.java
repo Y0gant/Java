@@ -41,12 +41,13 @@ public class FairLockExample {
         Thread ft4 = new Thread(task2, "Thread4");
 
         ft1.start();
+        ft1.sleep(50);
         ft2.start();
+        ft2.sleep(50);
         ft3.start();
+        ft3.sleep(50);
         ft4.start();
-        ft1.join();
-        ft2.join();
-        ft3.join();
-        ft4.join();
+        
+
     }
 }
