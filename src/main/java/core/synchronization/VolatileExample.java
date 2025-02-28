@@ -3,18 +3,19 @@ package core.synchronization;
 class SharedResource {
     private volatile boolean flag = false;
 
-    public void setFlagTrue() {
+    public synchronized void setFlagTrue() {
         flag = true;
+        notify();
     }
 
-    public void printIfFlagTrue() {
+    public synchronized void printIfFlagTrue() {
         while (!flag) {
             try {
-                Thread.sleep(80);
+                System.out.println("Flag is false");
+                wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            System.out.println("Flag is false");
         }
         System.out.println("Flag is now set to true by writerThread");
     }
@@ -27,7 +28,7 @@ public class VolatileExample {
 
         Thread writerThread = new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
