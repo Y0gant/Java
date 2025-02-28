@@ -52,6 +52,14 @@ public class ExecutorsExample1 {
             System.out.println("Error");
         }
         System.out.println("Time taken :" + (System.currentTimeMillis() - startTime2) + " ms");
+
+        ExecutorService cachedExecutor = Executors.newCachedThreadPool();
+        for (int i = 1; i <= 5; i++) {
+            cachedExecutor.execute(() -> System.out.println(Thread.currentThread().getName() + " executing task"));
+        }
+        cachedExecutor.shutdown();
+
+
     }
 
     public static long factorial(int i) {
