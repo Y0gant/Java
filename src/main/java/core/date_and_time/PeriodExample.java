@@ -37,7 +37,7 @@ public class PeriodExample {
         System.out.println("Compare Two Period Objects");
         System.out.println("p1 is Zero? " + p1.isZero());
         System.out.println("p1 is Negative? " + p1.isNegative());
-        System.out.println("p1 equals p3? " + p1.equals(p3)); // true
+        System.out.println("p1 equals p3? " + p1.equals(p3));
 
 
         String formatted = period.toString();
