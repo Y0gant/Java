@@ -18,10 +18,10 @@ public class WeakHashMapDemo {
     }
 
     public static void loadCache(Map<String, String> cacheValue) {
-        String s1 = new String("A");
-        String s2 = new String("B");
-        String s3 = new String("C");
-        String s4 = new String("D");
+        String s1 = "A";
+        String s2 = "B";
+        String s3 = "C";
+        String s4 = "D";
 
         /* Referenced using an object so that the reference
          * gets deleted as a string automatically gets strong referenced

@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.concurrent.*;
 
 class Producer implements Runnable {
-    private BlockingQueue<Integer> queue;
+    private final BlockingQueue<Integer> queue;
     private int value = 0;
 
     public Producer(BlockingQueue<Integer> queue) {
@@ -29,7 +29,7 @@ class Producer implements Runnable {
 
 
 class Consumer implements Runnable {
-    private BlockingQueue<Integer> queue;
+    private final BlockingQueue<Integer> queue;
 
     public Consumer(BlockingQueue<Integer> queue) {
         this.queue = queue;
@@ -38,7 +38,7 @@ class Consumer implements Runnable {
     @Override
     public void run() {
         for (int i = 0; i < 5; i++) {
-            
+
             try {
                 Integer value = queue.take();
                 System.out.println("Consumer consumed: " + value);

@@ -2,8 +2,8 @@ package core.collectionframework.queue_deque;
 
 class CustomQueue {
     private static final int DEFAULT_SIZE = 10;
+    private final int[] data;
     int end = 0;
-    private int[] data;
 
     public CustomQueue(int size) {
         this.data = new int[size];

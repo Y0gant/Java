@@ -87,7 +87,6 @@ public class CollectorsDemo {
         // Example 6:
         List<String> words2 = Arrays.asList("apple", "banana", "apple", "orange", "banana", "apple");
         System.out.println(words2.stream().collect(Collectors.toMap(k -> k, v -> 1, (x, y) -> x + y)));
-        ;
 
     }
 }

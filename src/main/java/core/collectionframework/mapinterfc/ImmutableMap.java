@@ -14,7 +14,7 @@ public class ImmutableMap {
 //        map2.put("C", 3); throws exception
         Map<String, Integer> map3 = Map.of("Shubham", 98, "Vivek", 89);
         System.out.println(map3);
-       // map3.put("Akshit", 88);throws exception
+        // map3.put("Akshit", 88);throws exception
         Map<String, Integer> map4 = Map.ofEntries(Map.entry("Akshit", 99), Map.entry("Vivek", 99));
         System.out.println(map4);
 

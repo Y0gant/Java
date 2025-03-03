@@ -21,8 +21,8 @@ public class ComplexReader {
 
     static class Reader {
         private final int BUFFER_SIZE = 1 << 16;
-        private DataInputStream din;
-        private byte[] buffer;
+        private final DataInputStream din;
+        private final byte[] buffer;
         private int bufferPointer, bytesRead;
 
         public Reader() {

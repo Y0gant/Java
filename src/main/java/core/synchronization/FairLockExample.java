@@ -47,7 +47,7 @@ public class FairLockExample {
         ft3.start();
         ft3.sleep(50);
         ft4.start();
-        
+
 
     }
 }

@@ -3,7 +3,7 @@ package core.synchronization;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AtomicExample {
-    private AtomicInteger counter = new AtomicInteger(0);
+    private final AtomicInteger counter = new AtomicInteger(0);
 
     public static void main(String[] args) throws InterruptedException {
         AtomicExample obj = new AtomicExample();

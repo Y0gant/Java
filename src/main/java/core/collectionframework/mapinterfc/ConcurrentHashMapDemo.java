@@ -18,17 +18,17 @@ public class ConcurrentHashMapDemo {
     // MAP --> SORTED --> THREAD SAFE --> ConcurrentSkipListMap
 
 
-        public static void main(String[] args) {
-            ConcurrentHashMap<Integer, String> map = new ConcurrentHashMap<>();
+    public static void main(String[] args) {
+        ConcurrentHashMap<Integer, String> map = new ConcurrentHashMap<>();
 
-            map.put(1, "Apple");
-            map.put(2, "Banana");
+        map.put(1, "Apple");
+        map.put(2, "Banana");
 
-            System.out.println(map.get(1)); // Apple
+        System.out.println(map.get(1)); // Apple
 
-            // Atomic update
-            map.putIfAbsent(2, "Cherry");
-            System.out.println(map.get(2)); // Banana (not updated because key 2 exists)
-        }
+        // Atomic update
+        map.putIfAbsent(2, "Cherry");
+        System.out.println(map.get(2)); // Banana (not updated because key 2 exists)
     }
+}
 

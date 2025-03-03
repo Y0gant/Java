@@ -4,7 +4,7 @@ package core.collectionframework.queue_deque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ConcurrentLinkedQueueDemo {
-    private static ConcurrentLinkedQueue<String> taskQueue = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<String> taskQueue = new ConcurrentLinkedQueue<>();
 
     public static void main(String[] args) {
 

@@ -1,19 +1,18 @@
 package core.collectionframework.mapinterfc;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 
 public class HashTableExample {
     public static void main(String[] args) {
-        Hashtable<Integer,String> students = new Hashtable<>();
+        Hashtable<Integer, String> students = new Hashtable<>();
         //Key And Values can't be null
         //Synchronized
         //only linked list in case of collision
-        students.put(12,"Avesh");
-        students.put(23,"Gautam");
-        students.put(43,"Shubham");
-        students.put(31,"Dev");
-        students.put(21,"Anupam");
+        students.put(12, "Avesh");
+        students.put(23, "Gautam");
+        students.put(43, "Shubham");
+        students.put(31, "Dev");
+        students.put(21, "Anupam");
         System.out.println(students);
 
 

@@ -2,8 +2,8 @@ package core.collectionframework.mapinterfc;
 
 import java.util.EnumMap;
 
-enum Days{
-    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
+enum Days {
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
 
 public class EnumMapExample {

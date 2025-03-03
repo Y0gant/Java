@@ -49,6 +49,6 @@ public class ZonedDateTimeExample {
         ZonedDateTime futureTime = now.plusDays(1);
         System.out.println("Now is before Future? " + now.isBefore(futureTime));
         System.out.println("Now is after Future? " + now.isAfter(futureTime));
-        
+
     }
 }

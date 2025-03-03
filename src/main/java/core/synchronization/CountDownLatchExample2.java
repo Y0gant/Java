@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 class Worker extends Thread {
-    private CountDownLatch latch;
+    private final CountDownLatch latch;
 
     public Worker(CountDownLatch latch) {
         this.latch = latch;
@@ -30,7 +30,7 @@ public class CountDownLatchExample2 {
         service.submit(new Worker(latch));
         service.submit(new Worker(latch));
         service.submit(new Worker(latch));
-        
+
         latch.await();
         System.out.println("All workers finished. Proceeding further...");
         service.shutdown();

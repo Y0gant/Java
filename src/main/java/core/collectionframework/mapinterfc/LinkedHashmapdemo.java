@@ -33,7 +33,6 @@ public class LinkedHashmapdemo {
         System.out.println(studentMap);
 
 
-
         LinkedHashMap<String, Integer> linkedHashMap = new LinkedHashMap<>(11, 0.3f, true); // double linked list
         linkedHashMap.put("Orange", 10);
         linkedHashMap.put("Apple", 20);
