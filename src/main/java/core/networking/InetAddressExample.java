@@ -2,11 +2,14 @@ package core.networking;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class InetAddressExample {
 
     public static void main(String[] args) {
-        String hostname = "www.google.com";
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter Host Address: ");
+        String hostname = scanner.nextLine();
         printIPAddress(hostname);
 
         printLocalHostDetails();
@@ -32,12 +35,5 @@ public class InetAddressExample {
         }
     }
 
-    public static String getIPAddress(String hostname) {
-        try {
-            InetAddress address = InetAddress.getByName(hostname);
-            return address.getHostAddress();
-        } catch (UnknownHostException e) {
-            return null;
-        }
-    }
+
 }
