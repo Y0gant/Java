@@ -16,21 +16,23 @@ public class TcpServer {
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             new Thread(() -> {
-                while (true) {
-                    String response;
-                    try {
+
+                try {
+                    while (true) {
+                        String response;
                         response = inputStream.readUTF();
                         System.out.println("Client: " + response);
                         if (response.equals("EXIT")) {
                             System.exit(0);
                         }
-                    } catch (IOException e) {
-                        System.out.println("Error " + e.getMessage());
-                    } finally {
-                        System.exit(0);
                     }
-
+                } catch (IOException e) {
+                    System.out.println("Error " + e.getMessage());
+                } finally {
+                    System.exit(0);
                 }
+
+
             }).start();
 
             String message;
