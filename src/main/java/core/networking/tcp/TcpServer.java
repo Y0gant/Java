@@ -10,35 +10,42 @@ public class TcpServer {
             System.out.println("Server listening to port 5000");
 
             Socket socket = server.accept();
+            System.out.println("Connected");
             DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
             DataInputStream inputStream = new DataInputStream(socket.getInputStream());
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-            String message;
-            String response;
+            new Thread(() -> {
+                while (true) {
+                    String response;
+                    try {
+                        response = inputStream.readUTF();
+                        System.out.println("Client: " + response);
+                        if (response.equals("EXIT")) {
+                            System.exit(0);
+                        }
+                    } catch (IOException e) {
+                        System.out.println("Error " + e.getMessage());
+                    } finally {
+                        System.exit(0);
+                    }
 
-            while (true) {
-                System.out.print("Waiting for client response...");
-                response = inputStream.readUTF();
-                System.out.print("\r                             \r");
-                System.out.println("Client: " + response);
-
-                if (response.equals("END")) {
-                    break;
                 }
+            }).start();
 
-                System.out.print("Enter Message: ");
-                message = userInput.readLine() + "\n";
+            String message;
+            while (true) {
+                message = userInput.readLine();
                 outputStream.writeUTF(message);
                 outputStream.flush();
 
-                if (message.equals("END")) {
-                    break;
+                if (message.equals("EXIT")) {
+                    System.exit(0);
                 }
             }
 
         } catch (IOException e) {
-            System.out.println("Error! " + e.getMessage());
+            System.out.println("Error " + e.getMessage());
         }
 
     }
