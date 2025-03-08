@@ -1,4 +1,4 @@
-package core.networking;
+package core.networking.tcp;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;

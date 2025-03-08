@@ -1,4 +1,4 @@
-package core.networking;
+package core.networking.tcp;
 
 import java.io.*;
 import java.net.ServerSocket;
