@@ -35,7 +35,7 @@ public class Client2 {
                 if (line.equals("END")) {
                     break;
                 }
-                System.out.print("Waiting for client message..");
+                System.out.print("Waiting for server message..");
 
                 // Read server response
                 serverResponse = inputStream.readUTF();
