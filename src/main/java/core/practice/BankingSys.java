@@ -1,10 +1,10 @@
 package core.practice;
 
-import java.util.Random;
+import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 interface BankAccount {
-
     void withdraw(int amount);
 
     void checkBalance();
@@ -25,103 +25,119 @@ class BaseBank implements BankAccount {
         this.holderName = holderName;
     }
 
-    public static BaseBank createAccount() {
-        Random rdm = new Random();
-        Scanner scanner = new Scanner(System.in);
-        int accountNo = rdm.nextInt(1000000, 999999999);
+    public static BaseBank createAccount(Scanner scanner) {
+        int accountNo = ThreadLocalRandom.current().nextInt(1000000, 999999999);
         System.out.print("Enter account holder's name: ");
         String name = scanner.nextLine();
-        System.out.println("Initial amount to deposit");
-        int initialBalance = scanner.nextInt();
 
+        int initialBalance;
+        while (true) {
+            System.out.print("Enter initial deposit amount: ");
+            try {
+                initialBalance = scanner.nextInt();
+                if (initialBalance < 0) {
+                    System.out.println("Initial balance cannot be negative. Try again.");
+                } else {
+                    break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a valid number.");
+                scanner.next();
+            }
+        }
+        scanner.nextLine();
         return new BaseBank(accountNo, initialBalance, name);
     }
 
-    public static void banking(BankAccount obj) {
-        Scanner scanner = new Scanner(System.in);
-
-        while (true) {
-            System.out.println("----------------");
-            System.out.println("""
-                    0 - Exit\s
-                    1 - Get details\s
-                    2- Check balance\s
-                    3- Deposit\s
-                    4- Withdraw\s
-                    """
-            );
-            System.out.print("Select option from above: ");
-            try {
-
-                int digit = scanner.nextInt();
-
-                switch (digit) {
-                    case 1 -> obj.getDetails();
-                    case 2 -> obj.checkBalance();
-                    case 3 -> {
-                        System.out.print("Enter amount to deposit:");
-                        int amount = scanner.nextInt();
-                        obj.deposit(amount);
-                    }
-                    case 4 -> {
-                        System.out.print("Enter amount to withdraw:");
-                        int amount = scanner.nextInt();
-                        obj.withdraw(amount);
-                    }
-                    case 0 -> {
-                        return;
-                    }
-                    default -> System.out.println("Please select from the given options");
-                }
-            } catch (Exception e) {
-                System.err.println("Error! " + e.getMessage());
-            }
-        }
-
-    }
-
     @Override
-    public void withdraw(int amount) {
-        if (amount > balance) {
-            System.out.println("----------------");
-            System.out.println("Can't withdraw insufficient balance! \n");
+    public synchronized void withdraw(int amount) {
+        if (amount <= 0) {
+            System.out.println("Invalid amount! Withdrawal amount must be greater than zero.");
             return;
         }
-        System.out.println("----------------");
-        System.out.println("Successfully withdrawn");
-        System.out.println("Remaining balance: " + (balance -= amount) + "\n");
-
-
+        if (amount > balance) {
+            System.out.println("Insufficient funds! Available balance: " + balance);
+            return;
+        }
+        balance -= amount;
+        System.out.println("Withdrawal successful. Remaining balance: " + balance);
     }
 
     @Override
-    public void checkBalance() {
-        System.out.println("----------------");
-        System.out.println("Current Balance: " + balance + "\n");
+    public synchronized void checkBalance() {
+        System.out.println("Current Balance: " + balance);
     }
 
     @Override
-    public void deposit(int amount) {
-        System.out.println("----------------");
-        System.out.println("Successfully deposited");
-        System.out.println("Current Balance " + (balance += amount) + "\n");
+    public synchronized void deposit(int amount) {
+        if (amount <= 0) {
+            System.out.println("Invalid deposit amount. Please enter a positive number.");
+            return;
+        }
+        balance += amount;
+        System.out.println("Deposit successful. New balance: " + balance);
     }
 
     @Override
     public void getDetails() {
-        System.out.println("----------------");
-        System.out.println("Account holder name: " + holderName);
-        System.out.println("Account number: " + accountNumber);
-        System.out.println("Current balance: " + balance + "\n");
+        System.out.println("Account Holder: " + holderName);
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Current Balance: " + balance);
     }
-
 }
 
+class BankService {
+    private static final int EXIT = 0;
+    private static final int DETAILS = 1;
+    private static final int BALANCE = 2;
+    private static final int DEPOSIT = 3;
+    private static final int WITHDRAW = 4;
+
+    public static void banking(BankAccount account, Scanner scanner) {
+        while (true) {
+            System.out.println("----------------------------");
+            System.out.println("0 - Exit");
+            System.out.println("1 - Get Account Details");
+            System.out.println("2 - Check Balance");
+            System.out.println("3 - Deposit Money");
+            System.out.println("4 - Withdraw Money");
+            System.out.println("----------------------------");
+            System.out.print("Select an option: ");
+
+            try {
+                int option = scanner.nextInt();
+                switch (option) {
+                    case DETAILS -> account.getDetails();
+                    case BALANCE -> account.checkBalance();
+                    case DEPOSIT -> {
+                        System.out.print("Enter deposit amount: ");
+                        int amount = scanner.nextInt();
+                        account.deposit(amount);
+                    }
+                    case WITHDRAW -> {
+                        System.out.print("Enter withdrawal amount: ");
+                        int amount = scanner.nextInt();
+                        account.withdraw(amount);
+                    }
+                    case EXIT -> {
+                        System.out.println("Thank you for banking with us!");
+                        return;
+                    }
+                    default -> System.out.println("Invalid option! Please choose a valid menu option.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number.");
+                scanner.next();
+            }
+        }
+    }
+}
 
 public class BankingSys {
     public static void main(String[] args) {
-        BankAccount account1 = BaseBank.createAccount();
-        BaseBank.banking(account1);
-
+        Scanner scanner = new Scanner(System.in);
+        BankAccount account1 = BaseBank.createAccount(scanner);
+        BankService.banking(account1, scanner);
+        scanner.close();
     }
 }
