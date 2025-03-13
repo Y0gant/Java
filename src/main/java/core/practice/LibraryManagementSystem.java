@@ -99,9 +99,9 @@ class Library {
 }
 
 class Book {
-    private int bookID;
-    private String title;
-    private String author;
+    private final int bookID;
+    private final String title;
+    private final String author;
     private boolean isAvailable;
 
     public Book(int bookID, String title, String author) {
@@ -141,8 +141,8 @@ class Book {
 }
 
 class Student {
-    private int studentID;
-    private String name;
+    private final int studentID;
+    private final String name;
     private List<Book> borrowedBooks;
 
     public Student(int studentID, String name) {
