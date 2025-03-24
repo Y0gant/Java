@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 class Student2 {
-    private int studentID;
+    private final int studentID;
     private String name;
     private int age;
     private List<Course> courses;
@@ -114,8 +114,8 @@ class Enrollment {
 }
 
 public class StudentManagementSystem {
-    private static List<Student2> students;
-    private static List<Course> courses;
+    private static List<Student2> students = new ArrayList<>();
+    private static List<Course> courses = new ArrayList<>();
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -141,7 +141,7 @@ public class StudentManagementSystem {
                     System.out.print("Enter Age: ");
                     int age = scanner.nextInt();
                     students.add(new Student2(studentID, name, age));
-                    break;
+
                 }
                 case 2 -> {
                     System.out.print("Enter Course ID: ");
@@ -152,28 +152,74 @@ public class StudentManagementSystem {
                     System.out.print("Enter Instructor Name: ");
                     String instructor = scanner.nextLine();
                     courses.add(new Course(courseID, courseName, instructor));
-                    break;
+
                 }
-               /* case 3 -> {
+                case 3 -> {
                     System.out.print("Enter Student ID: ");
                     int enrollStudentID = scanner.nextInt();
                     System.out.print("Enter Course ID: ");
                     int enrollCourseID = scanner.nextInt();
-                    Student student2 = findStudentByID(enrollStudentID);
+                    Student2 student2 = findStudentByID(enrollStudentID);
                     Course course = findCourseByID(enrollCourseID);
-                    if (student != null && course != null) {
-                        new Enrollment(student, course).enroll();
+                    if (student2 != null && course != null) {
+                        new Enrollment(student2, course).enroll();
                     } else {
                         System.out.println("Invalid Student or Course ID.");
                     }
-                    break;
-                }*/
+
+                }
+                case 4 -> {
+                    System.out.print("Enter Student ID: ");
+                    int dropStudentID = scanner.nextInt();
+                    System.out.print("Enter Course ID: ");
+                    int dropCourseID = scanner.nextInt();
+                    Student2 dropStudent = findStudentByID(dropStudentID);
+                    Course dropCourse = findCourseByID(dropCourseID);
+                    if (dropStudent != null && dropCourse != null) {
+                        new Enrollment(dropStudent, dropCourse).unenroll();
+                    } else {
+                        System.out.println("Invalid Student or Course ID.");
+                    }
+                }
+                case 5 -> {
+                    if (students.isEmpty()) {
+                        System.out.println("No data available, add students first.");
+                        break;
+                    }
+                    for (Student2 s : students) {
+                        System.out.println(s);
+                    }
+                }
+                case 6 -> {
+                    System.out.println("Exiting....");
+                    scanner.close();
+                    return;
+                }
+                default -> System.out.println("Invalid choice....");
             }
 
         }
 
     }
 
+    private static Course findCourseByID(int enrollCourseID) {
+
+        for (Course course : courses) {
+            if (course.getCourseID() == enrollCourseID) {
+                return course;
+            }
+        }
+        return null;
+    }
+
+    private static Student2 findStudentByID(int enrollStudentID) {
+        for (Student2 s : students) {
+            if (s.getStudentID() == enrollStudentID) {
+                return s;
+            }
+        }
+        return null;
+    }
 
 }
 
