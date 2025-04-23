@@ -10,11 +10,8 @@ import java.util.logging.SimpleFormatter;
 
 /*
 TODO
-  Revoke Roles	            -> Revoke assigned roles using REVOKE ... FROM ....
-  View Privileges	            -> View granted roles or privileges for a user (e.g., \du equivalent).
   Create Table	            -> Allow user to create a table by entering column names/types.
   Insert / Update / Delete    -> Table Data	Enable CRUD operations on table rows.
-  View Table                  -> Data	Option to SELECT * FROM table_name and display rows.
   Drop Table	                -> Allow user to delete a table from the DB.
   List Tables	                -> Show all tables using information_schema.tables or \dt.
   Backup & Restore	        -> Integrate basic support for pg_dump and restore operations (CLI-based or via code).
@@ -26,6 +23,9 @@ TODO
   List All Users	            -> Show all users in the database using SELECT rolname FROM pg_roles.
   Update User Password	    -> Allow changing a user’s password using ALTER USER SQL.
   Revoke Privileges	        -> Option to revoke SELECT or other privileges from a user.
+  Revoke Roles	            -> Revoke assigned roles using REVOKE ... FROM ....
+  View Privileges	            -> View granted roles or privileges for a user (e.g., \du equivalent).
+  View Table                  -> Data	Option to SELECT * FROM table_name and display rows.
   */
 
 
@@ -46,18 +46,18 @@ public class DataBaseOps {
     private final Connection connection = connectToDB();
 
     public static void main(String[] args) {
-        while (true) {
-            int num = scanner.nextByte();
-            logger.info("User selected option: " + num);
-            switch (num) {
-                case 0 -> {
-                    break;
-                }
-                case 1 -> {
-
-                }
-            }
-        }
+//        while (true) {
+//            int num = scanner.nextByte();
+//            logger.info("User selected option: " + num);
+//            switch (num) {
+//                case 0 -> {
+//                    break;
+//                }
+//                case 1 -> {
+//
+//                }
+//            }
+//        }
     }
 
     public static Connection connectToDB() {
@@ -103,6 +103,63 @@ public class DataBaseOps {
         return null;
     }
 
+    public boolean tableExists(String tableName) {
+        String sql = "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = ?)";
+        if (connection != null) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, tableName);
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    return rs.getBoolean(1);
+                }
+            } catch (SQLException e) {
+                logger.warning("Error checking table existence: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    public void createTableFromUserInput() {
+        System.out.print("Enter table name: ");
+        String tableName = scanner.nextLine();
+
+        System.out.print("Enter number of columns: ");
+        int columnCount = scanner.nextInt();
+        scanner.nextLine();
+
+        StringBuilder query = new StringBuilder("CREATE TABLE IF NOT EXISTS ");
+        query.append(tableName).append(" (");
+
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.print("Enter column " + i + " name: ");
+            String columnName = scanner.nextLine();
+
+            System.out.print("Enter column " + i + " type (e.g., VARCHAR(100), INT, SERIAL, etc.): ");
+            String columnType = scanner.nextLine();
+
+            System.out.print("Enter constraint " + i + " name: ");
+            String constraint = scanner.nextLine();
+
+
+            query.append(columnName).append(" ").append(columnType);
+
+            if (i != columnCount) {
+                query.append(", ");
+            }
+        }
+
+        query.append(");");
+
+        if (connection != null) {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(query.toString());
+                logger.info(" Table '" + tableName + "' created successfully.");
+            } catch (SQLException e) {
+                logger.severe(" Failed to create table: " + e.getMessage() + e);
+            }
+        }
+    }
+
     public void listAllUsers() {
         String sql = "SELECT rolname FROM pg_roles;";
         if (connection != null) {
@@ -120,6 +177,59 @@ public class DataBaseOps {
         }
     }
 
+    public void viewTable() {
+        System.out.println("Enter table name");
+        String tableName = scanner.nextLine();
+        if (!tableExists(tableName)) {
+            logger.warning("Table does not exists!!");
+            return;
+        }
+        String view = "SELECT * FROM " + tableName;
+        if (connection != null) {
+            try (Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery(view)) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columnCount = rsmd.getColumnCount();
+
+                while (rs.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        System.out.print(rsmd.getColumnName(i) + ": " + rs.getString(i) + "  ");
+                    }
+                    System.out.println();
+                }
+            } catch (SQLException e) {
+                logger.severe("Error displaying table :" + tableName + e.getMessage() + e);
+            }
+        }
+    }
+
+    public void viewTableLimited() {
+        System.out.println("Enter table name");
+        String tableName = scanner.nextLine();
+        if (!tableExists(tableName)) {
+            logger.warning("Table does not exists!!");
+            return;
+        }
+        System.out.println("Enter number of rows to view:");
+        String rows = scanner.nextLine();
+        String view = "SELECT * FROM " + tableName + " LIMIT " + rows;
+        if (connection != null) {
+            try (Statement statement = connection.createStatement();
+                 ResultSet rs = statement.executeQuery(view)) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columnCount = rsmd.getColumnCount();
+
+                while (rs.next()) {
+                    for (int i = 1; i <= columnCount; i++) {
+                        System.out.print(rsmd.getColumnName(i) + ": " + rs.getString(i) + "  ");
+                    }
+                    System.out.println();
+                }
+            } catch (SQLException e) {
+                logger.severe("Error displaying table :" + tableName + e.getMessage() + e);
+            }
+        }
+    }
 
     public boolean createUser() {
         if (!checkSuperUser() && !checkCanCreateRoles()) {
@@ -193,10 +303,12 @@ public class DataBaseOps {
         }
 
         if (checkUser(usersPasswdToBeChanged) && (checkSuperUser() || checkCanCreateRoles())) {
-            String alter = "ALTER USER " + usersPasswdToBeChanged + " WITH PASSWORD '" + passwd + "'";
+            String alter = "ALTER USER " + usersPasswdToBeChanged + " WITH PASSWORD ?";
             if (connection != null) {
-                try (Statement statement = connection.createStatement()) {
-                    statement.execute(alter);
+                try (PreparedStatement ps = connection.prepareStatement(alter)) {
+                    ps.setString(1, passwd);
+                    ps.execute();
+
                     logger.info("Password updated successfully for user: " + usersPasswdToBeChanged);
                     return true;
                 } catch (SQLException e) {
@@ -206,7 +318,6 @@ public class DataBaseOps {
         }
         return false;
     }
-
 
     private boolean grantRole() {
         System.out.println("Enter username :");
@@ -302,7 +413,7 @@ public class DataBaseOps {
         System.out.println("Enter username from whom privileges are to be revoked:");
         String userName = scanner.nextLine().trim();
 
-        if (userName.equals("postgres")) {
+        if (userName.equalsIgnoreCase("postgres")) {
             logger.warning("Attempt to revoke privileges from 'postgres' user denied.");
             System.out.println("Can't perform operations on this user");
             return false;
@@ -316,17 +427,19 @@ public class DataBaseOps {
             String privilege = scanner.nextLine().trim().toUpperCase();
 
             if (!table.isEmpty() && !privilege.isEmpty()) {
-                String revokeSQL = "REVOKE " + privilege + " ON " + table + " FROM " + userName;
+                String revokePrivSQL = "REVOKE " + privilege + " ON " + table + " FROM " + userName;
                 if (connection != null) {
                     try (Statement stmt = connection.createStatement()) {
-                        stmt.executeUpdate(revokeSQL);
+                        stmt.executeUpdate(revokePrivSQL);
                         logger.info("Revoked " + privilege + " on table '" + table + "' from user '" + userName + "'");
                         System.out.println("Privilege revoked successfully.");
                         return true;
                     } catch (SQLException e) {
-                        logger.severe("Error revoking privilege: " + e.getMessage());
+                        logger.severe("Error revoking " + privilege + " from user " + userName + " on table " + table + ": " + e.getMessage());
                     }
                 }
+            } else {
+                logger.warning("Table name or privilege was empty.");
             }
         } else {
             logger.warning("User " + userName + " does not exist.");
@@ -335,6 +448,44 @@ public class DataBaseOps {
         return false;
     }
 
+    public void viewPrivileges() {
+        if (connection != null) {
+            try (Statement stmt = connection.createStatement()) {
+
+                String query = """
+                        SELECT 
+                            r.rolname AS role_name,
+                            r.rolsuper AS is_superuser,
+                            r.rolcreaterole AS can_create_roles,
+                            r.rolcreatedb AS can_create_db,
+                            ARRAY(
+                                SELECT b.rolname 
+                                FROM pg_auth_members m 
+                                JOIN pg_roles b ON (m.roleid = b.oid) 
+                                WHERE m.member = r.oid
+                            ) AS member_of
+                        FROM pg_roles r
+                        ORDER BY r.rolname;
+                        """;
+
+                ResultSet rs = stmt.executeQuery(query);
+
+                while (rs.next()) {
+                    System.out.println("Role Name     : " + rs.getString("role_name"));
+                    System.out.println("Superuser     : " + rs.getBoolean("is_superuser"));
+                    System.out.println("Create Role   : " + rs.getBoolean("can_create_roles"));
+                    System.out.println("Create DB     : " + rs.getBoolean("can_create_db"));
+                    Array rolesArray = rs.getArray("member_of");
+                    String[] roles = (String[]) rolesArray.getArray();
+                    System.out.println("Member of     : " + String.join(", ", roles));
+                    System.out.println("------------------------------");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     //? Helper methods
     private boolean checkUser(String userName) {
