@@ -1,33 +1,12 @@
 package advance.database_connectivity;
 
 import java.sql.*;
+import java.util.Collections;
 import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
-
-/*
-TODO
-  Create Table	            -> Allow user to create a table by entering column names/types.
-  Insert / Update / Delete    -> Table Data	Enable CRUD operations on table rows.
-  Drop Table	                -> Allow user to delete a table from the DB.
-  List Tables	                -> Show all tables using information_schema.tables or \dt.
-  Backup & Restore	        -> Integrate basic support for pg_dump and restore operations (CLI-based or via code).
-  Login & Role-based Menu     -> Access Build an authentication/role-based menu flow for regular users vs admins.
-  Execute Custom SQL	        -> Let users run custom queries for advanced use.
-  Exception Handling & Retry	-> Add retry logic on failure for robustness.
-
-  //Done
-  List All Users	            -> Show all users in the database using SELECT rolname FROM pg_roles.
-  Update User Password	    -> Allow changing a user’s password using ALTER USER SQL.
-  Revoke Privileges	        -> Option to revoke SELECT or other privileges from a user.
-  Revoke Roles	            -> Revoke assigned roles using REVOKE ... FROM ....
-  View Privileges	            -> View granted roles or privileges for a user (e.g., \du equivalent).
-  View Table                  -> Data	Option to SELECT * FROM table_name and display rows.
-  */
-
 
 public class DataBaseOps {
     private static final Logger logger = Logger.getLogger(DataBaseOps.class.getName());
@@ -46,18 +25,52 @@ public class DataBaseOps {
     private final Connection connection = connectToDB();
 
     public static void main(String[] args) {
-//        while (true) {
-//            int num = scanner.nextByte();
-//            logger.info("User selected option: " + num);
-//            switch (num) {
-//                case 0 -> {
-//                    break;
-//                }
-//                case 1 -> {
-//
-//                }
-//            }
-//        }
+
+        DataBaseOps dbOps = new DataBaseOps();
+
+        while (true) {
+            System.out.println("""
+                        \n========= Database Operations Menu =========
+                        1. Create User
+                        2. Delete User
+                        3. Update User Password
+                        4. View Privileges
+                        5. Create Table
+                        6. View Table
+                        7. View Table (Limited)
+                        8. Insert Into Table
+                        9. Revoke Role
+                        10. Revoke Privilege
+                        11. List All Users
+                        12. Delete Table
+                        0. Exit
+                    """);
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1 -> dbOps.createUser();
+                case 2 -> dbOps.deleteUser();
+                case 3 -> dbOps.updatePassword();
+                case 4 -> dbOps.viewPrivileges();
+                case 5 -> dbOps.createTableFromUserInput();
+                case 6 -> dbOps.viewTable();
+                case 7 -> dbOps.viewTableLimited();
+                case 8 -> dbOps.insertIntoTable();
+                case 9 -> dbOps.revokeRoles();
+                case 10 -> dbOps.revokePrivileges();
+                case 11 -> dbOps.listAllUsers();
+                case 12 -> dbOps.deleteTable();
+                case 0 -> {
+                    System.out.println("Exiting program. Goodbye!");
+                    dbOps.closeConnection();
+                    return;
+                }
+                default -> System.out.println("Invalid option. Please try again.");
+            }
+        }
     }
 
     public static Connection connectToDB() {
@@ -79,7 +92,6 @@ public class DataBaseOps {
             String passwd = scanner.nextLine();
 
             try {
-                Class.forName("org.postgresql.Driver");
                 conn = DriverManager.getConnection(url, username, passwd);
                 logger.info("Connected to database: " + database + " with username: " + username);
                 System.out.println("Connection established successfully.");
@@ -90,18 +102,34 @@ public class DataBaseOps {
 
                 if (attempts < MAX_ATTEMPTS) {
                     System.out.println("Attempt " + attempts + " of " + MAX_ATTEMPTS + ". Please try again.");
+                    try {
+                        Thread.sleep(attempts * 1000L);
+                    } catch (InterruptedException ex) {
+                        logger.warning("Error at connection timeout logic" + e.getMessage() + e);
+                    }
                 }
-            } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "PostgreSQL JDBC Driver not found.", e);
-                System.out.println("PostgreSQL JDBC Driver not found. Please ensure it's in your classpath.");
-                break;
             }
         }
 
-        System.out.println("Failed to connect to database after " + MAX_ATTEMPTS + " attempts.");
+        logger.severe("Failed to connect to database after " + MAX_ATTEMPTS + " attempts.");
 
         return null;
     }
+
+    public boolean customQuery() {
+        String custom = scanner.nextLine();
+        if (connection != null) {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute(custom);
+                logger.info("Custom query executed successfully.");
+                return true;
+            } catch (SQLException e) {
+                logger.severe("Error while executing custom query " + e.getMessage() + e);
+            }
+        }
+        return false;
+    }
+
 
     public boolean tableExists(String tableName) {
         String sql = "SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = ?)";
@@ -134,14 +162,16 @@ public class DataBaseOps {
             System.out.print("Enter column " + i + " name: ");
             String columnName = scanner.nextLine();
 
-            System.out.print("Enter column " + i + " type (e.g., VARCHAR(100), INT, SERIAL, etc.): ");
+            System.out.print("Enter column " + i + " type (e.g., VARCHAR(100), INT, SERIAL): ");
             String columnType = scanner.nextLine();
 
-            System.out.print("Enter constraint " + i + " name: ");
+            System.out.print("Enter constraints for column " + i + " (e.g., NOT NULL, PRIMARY KEY) or press Enter to skip: ");
             String constraint = scanner.nextLine();
 
-
             query.append(columnName).append(" ").append(columnType);
+            if (!constraint.isEmpty()) {
+                query.append(" ").append(constraint);
+            }
 
             if (i != columnCount) {
                 query.append(", ");
@@ -153,12 +183,243 @@ public class DataBaseOps {
         if (connection != null) {
             try (Statement stmt = connection.createStatement()) {
                 stmt.executeUpdate(query.toString());
-                logger.info(" Table '" + tableName + "' created successfully.");
+                logger.info("Table '" + tableName + "' created successfully.");
             } catch (SQLException e) {
-                logger.severe(" Failed to create table: " + e.getMessage() + e);
+                logger.log(Level.SEVERE, "Failed to create table: " + e.getMessage(), e);
+            }
+        } else {
+            logger.warning("No active database connection.");
+        }
+    }
+
+    public void insertIntoTable() {
+        System.out.print("Enter table name: ");
+        String tableName = scanner.nextLine();
+
+        System.out.print("Enter number of columns: ");
+        int columnCount = scanner.nextInt();
+        scanner.nextLine(); // consume newline
+
+        String[] columns = new String[columnCount];
+        String[] values = new String[columnCount];
+
+        for (int i = 0; i < columnCount; i++) {
+            System.out.print("Enter column name " + (i + 1) + ": ");
+            columns[i] = scanner.nextLine();
+
+            System.out.print("Enter value for " + columns[i] + ": ");
+            values[i] = scanner.nextLine();
+        }
+
+        String columnPart = String.join(", ", columns);
+        String valuePlaceholders = String.join(", ", Collections.nCopies(columnCount, "?"));
+
+        String sql = "INSERT INTO " + tableName + " (" + columnPart + ") VALUES (" + valuePlaceholders + ")";
+
+        if (connection != null) {
+            try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+                for (int i = 0; i < columnCount; i++) {
+                    stmt.setString(i + 1, values[i]);
+                }
+                stmt.executeUpdate();
+                System.out.println("Data inserted successfully.");
+            } catch (SQLException e) {
+                System.out.println("Error inserting data: " + e.getMessage());
             }
         }
     }
+
+    public boolean updateTableRow() {
+        System.out.println("Enter table name to update:");
+        String tableName = scanner.nextLine();
+
+        if (!tableExists(tableName)) {
+            logger.warning("Table '" + tableName + "' does not exist.");
+            return false;
+        }
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT column_name, data_type, is_identity " +
+                                              "FROM information_schema.columns " +
+                                              "WHERE table_name = '" + tableName + "' " +
+                                              "ORDER BY ordinal_position")) {
+
+            System.out.println("Available columns in table '" + tableName + "':");
+            while (rs.next()) {
+                String colName = rs.getString("column_name");
+                String dataType = rs.getString("data_type");
+                String isIdentity = rs.getString("is_identity");
+
+                if (isIdentity.equals("YES")) {
+                    System.out.println(colName + " (" + dataType + ", PRIMARY KEY) - cannot be updated");
+                } else {
+                    System.out.println(colName + " (" + dataType + ")");
+                }
+            }
+
+            System.out.println("\nEnter column name to use in WHERE condition (to identify row):");
+            String whereColumn = scanner.nextLine();
+
+            System.out.println("Enter value to match in WHERE condition:");
+            String whereValue = scanner.nextLine();
+
+            System.out.println("Enter column name to update:");
+            String updateColumn = scanner.nextLine();
+
+            System.out.println("Enter new value for column '" + updateColumn + "':");
+            String newValue = scanner.nextLine();
+
+            String updateSQL = "UPDATE " + tableName + " SET " + updateColumn + " = ? WHERE " + whereColumn + " = ?";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(updateSQL)) {
+                pstmt.setString(1, newValue);
+                pstmt.setString(2, whereValue);
+
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println(rowsAffected + " row(s) updated.");
+                    logger.info("Updated " + rowsAffected + " row(s) in table '" + tableName +
+                                "', set " + updateColumn + " = '" + newValue + "' where " +
+                                whereColumn + " = '" + whereValue + "'");
+                    return true;
+                } else {
+                    System.out.println("No rows matched the criteria. Nothing updated.");
+                    logger.info("No rows updated in table '" + tableName +
+                                "' where " + whereColumn + " = '" + whereValue + "'");
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating row in table '" + tableName + "'", e);
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteTableRow() {
+        System.out.println("Enter table name to delete from:");
+        String tableName = scanner.nextLine();
+
+        if (!tableExists(tableName)) {
+            logger.warning("Table '" + tableName + "' does not exist.");
+            return false;
+        }
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT column_name, data_type, is_identity, is_nullable " +
+                                              "FROM information_schema.columns " +
+                                              "WHERE table_name = '" + tableName + "' " +
+                                              "ORDER BY ordinal_position")) {
+
+            System.out.println("Table columns (use these to identify row to delete):");
+            while (rs.next()) {
+                String colName = rs.getString("column_name");
+                String dataType = rs.getString("data_type");
+                String isIdentity = rs.getString("is_identity");
+                String isNullable = rs.getString("is_nullable");
+
+                System.out.println(colName + " (" + dataType +
+                                   (isIdentity.equals("YES") ? ", PRIMARY KEY" : "") +
+                                   (isNullable.equals("NO") ? ", NOT NULL" : "") + ")");
+            }
+
+            System.out.println("\nEnter column name to use in WHERE condition:");
+            String whereColumn = scanner.nextLine();
+
+            System.out.println("Enter value to match in WHERE condition:");
+            String whereValue = scanner.nextLine();
+
+            String deleteSQL = "DELETE FROM " + tableName + " WHERE " + whereColumn + " = ?";
+
+            try (PreparedStatement pstmt = connection.prepareStatement(deleteSQL)) {
+                pstmt.setString(1, whereValue);
+
+                System.out.println("This will delete all rows where " + whereColumn + " = '" + whereValue + "'");
+                System.out.println("Are you sure? (yes/no)");
+                String confirm = scanner.nextLine();
+
+                if (!confirm.equalsIgnoreCase("yes")) {
+                    System.out.println("Operation cancelled.");
+                    return false;
+                }
+
+                int rowsAffected = pstmt.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    System.out.println(rowsAffected + " row(s) deleted.");
+                    logger.info("Deleted " + rowsAffected + " row(s) from table '" + tableName +
+                                "' where " + whereColumn + " = '" + whereValue + "'");
+                    return true;
+                } else {
+                    System.out.println("No rows matched the criteria. Nothing deleted.");
+                    logger.info("No rows deleted from table '" + tableName +
+                                "' where " + whereColumn + " = '" + whereValue + "'");
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error deleting row from table '" + tableName + "'", e);
+            System.out.println("Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean viewAllTables() {
+        String viewAll = "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'";
+        if (connection != null) {
+            try (Statement stmt = connection.createStatement();
+                 ResultSet result = stmt.executeQuery(viewAll)) {
+
+                System.out.println("Tables in database:");
+                int count = 0;
+                while (result.next()) {
+                    System.out.println("- " + result.getString("table_name"));
+                    count++;
+                }
+
+                if (count == 0) {
+                    System.out.println("No tables found.");
+                } else {
+                    logger.info("Successfully listed " + count + " tables.");
+                    return true;
+                }
+            } catch (SQLException e) {
+                logger.severe("Error viewing all tables: " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteTable() {
+        System.out.println("Enter the table name you want to delete:");
+        String toBeDeleted = scanner.nextLine();
+
+        if (!checkSuperUser()) {
+            logger.warning("Insufficient privileges to delete the table.");
+            return false;
+        }
+        if (!tableExists(toBeDeleted)) {
+            logger.warning("Table '" + toBeDeleted + "' does not exist.");
+            return false;
+        }
+        String drop = "DROP TABLE IF EXISTS " + toBeDeleted;
+
+        if (connection != null) {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(drop);
+                logger.info("Successfully deleted table: " + toBeDeleted);
+                return true;
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Failed to delete table: " + toBeDeleted, e);
+            }
+        }
+
+
+        return false;
+    }
+
 
     public void listAllUsers() {
         String sql = "SELECT rolname FROM pg_roles;";
@@ -453,15 +714,15 @@ public class DataBaseOps {
             try (Statement stmt = connection.createStatement()) {
 
                 String query = """
-                        SELECT 
+                        SELECT
                             r.rolname AS role_name,
                             r.rolsuper AS is_superuser,
                             r.rolcreaterole AS can_create_roles,
                             r.rolcreatedb AS can_create_db,
                             ARRAY(
-                                SELECT b.rolname 
-                                FROM pg_auth_members m 
-                                JOIN pg_roles b ON (m.roleid = b.oid) 
+                                SELECT b.rolname
+                                FROM pg_auth_members m
+                                JOIN pg_roles b ON (m.roleid = b.oid)
                                 WHERE m.member = r.oid
                             ) AS member_of
                         FROM pg_roles r
@@ -498,11 +759,9 @@ public class DataBaseOps {
                     rs = stmt.executeQuery();
                 }
             }
-            if (rs.next()) {
+            if (rs != null && rs.next()) {
                 logger.fine("User '" + userName + "' exists.");
                 return true;
-            } else {
-                logger.fine("User '" + userName + "' does not exist.");
             }
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Error checking if user exists: " + e.getMessage(), e);
