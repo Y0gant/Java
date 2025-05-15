@@ -49,6 +49,7 @@ public class SaveImage {
     void saveImage() {
         String insertSQL = "INSERT INTO images (name, data) VALUES (?, ?)";
         try {
+            connection.setAutoCommit(false);
             PreparedStatement stmt = connection.prepareStatement(insertSQL);
             System.out.println("Enter image name :");
             String name = sc.nextLine();
@@ -61,13 +62,31 @@ public class SaveImage {
             if (rows > 0) {
                 logger.info("Image saved successfully.");
             }
+            connection.commit();
             image.close();
         } catch (SQLException e) {
-            logger.warning("Incorrect query " + e.getMessage() + e);
+            logger.warning("SQL Exception :" + e.getMessage() + e);
+            try {
+                if (connection != null) {
+                    connection.rollback(); // Rollback on failure
+                    logger.info("Transaction rolled back due to error.");
+                }
+            } catch (SQLException rollbackEx) {
+                logger.severe("Rollback failed: " + rollbackEx.getMessage());
+            }
+
         } catch (FileNotFoundException e) {
             logger.warning("Cannot find image " + e.getMessage() + e);
         } catch (IOException e) {
             logger.warning("IOException " + e.getMessage() + e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                logger.warning("Failed to reset auto-commit: " + e.getMessage() + e);
+            }
         }
     }
 
