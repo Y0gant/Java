@@ -1,4 +1,4 @@
-package advance.database_connectivity;
+package core.database_connectivity;
 
 import java.sql.*;
 

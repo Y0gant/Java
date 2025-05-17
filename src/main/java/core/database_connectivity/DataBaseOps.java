@@ -1,4 +1,4 @@
-package advance.database_connectivity;
+package core.database_connectivity;
 
 import java.sql.*;
 import java.util.Collections;
@@ -240,9 +240,9 @@ public class DataBaseOps {
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT column_name, data_type, is_identity " +
-                                              "FROM information_schema.columns " +
-                                              "WHERE table_name = '" + tableName + "' " +
-                                              "ORDER BY ordinal_position")) {
+                     "FROM information_schema.columns " +
+                     "WHERE table_name = '" + tableName + "' " +
+                     "ORDER BY ordinal_position")) {
 
             System.out.println("Available columns in table '" + tableName + "':");
             while (rs.next()) {
@@ -280,13 +280,13 @@ public class DataBaseOps {
                 if (rowsAffected > 0) {
                     System.out.println(rowsAffected + " row(s) updated.");
                     logger.info("Updated " + rowsAffected + " row(s) in table '" + tableName +
-                                "', set " + updateColumn + " = '" + newValue + "' where " +
-                                whereColumn + " = '" + whereValue + "'");
+                            "', set " + updateColumn + " = '" + newValue + "' where " +
+                            whereColumn + " = '" + whereValue + "'");
                     return true;
                 } else {
                     System.out.println("No rows matched the criteria. Nothing updated.");
                     logger.info("No rows updated in table '" + tableName +
-                                "' where " + whereColumn + " = '" + whereValue + "'");
+                            "' where " + whereColumn + " = '" + whereValue + "'");
                     return false;
                 }
             }
@@ -308,9 +308,9 @@ public class DataBaseOps {
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT column_name, data_type, is_identity, is_nullable " +
-                                              "FROM information_schema.columns " +
-                                              "WHERE table_name = '" + tableName + "' " +
-                                              "ORDER BY ordinal_position")) {
+                     "FROM information_schema.columns " +
+                     "WHERE table_name = '" + tableName + "' " +
+                     "ORDER BY ordinal_position")) {
 
             System.out.println("Table columns (use these to identify row to delete):");
             while (rs.next()) {
@@ -320,8 +320,8 @@ public class DataBaseOps {
                 String isNullable = rs.getString("is_nullable");
 
                 System.out.println(colName + " (" + dataType +
-                                   (isIdentity.equals("YES") ? ", PRIMARY KEY" : "") +
-                                   (isNullable.equals("NO") ? ", NOT NULL" : "") + ")");
+                        (isIdentity.equals("YES") ? ", PRIMARY KEY" : "") +
+                        (isNullable.equals("NO") ? ", NOT NULL" : "") + ")");
             }
 
             System.out.println("\nEnter column name to use in WHERE condition:");
@@ -349,12 +349,12 @@ public class DataBaseOps {
                 if (rowsAffected > 0) {
                     System.out.println(rowsAffected + " row(s) deleted.");
                     logger.info("Deleted " + rowsAffected + " row(s) from table '" + tableName +
-                                "' where " + whereColumn + " = '" + whereValue + "'");
+                            "' where " + whereColumn + " = '" + whereValue + "'");
                     return true;
                 } else {
                     System.out.println("No rows matched the criteria. Nothing deleted.");
                     logger.info("No rows deleted from table '" + tableName +
-                                "' where " + whereColumn + " = '" + whereValue + "'");
+                            "' where " + whereColumn + " = '" + whereValue + "'");
                     return false;
                 }
             }
