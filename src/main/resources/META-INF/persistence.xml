@@ -1,0 +1,29 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <persistence-unit name="my-order-app" transaction-type="RESOURCE_LOCAL">
+
+        <!--         Annotated Entity Classes -->
+        <!--        <class>entity.Customer</class>-->
+        <!--        <class>entity.Order</class>-->
+        <!--        <class>entity.Product</class>-->
+        <!--        <class>entity.OrderItem</class>-->
+
+        <!-- Database Connection Properties -->
+        <properties>
+            <!-- JDBC Configuration -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/test"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="419650"/>
+
+            <!-- Hibernate Dialect for PostgreSQL -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+
+            <!-- Schema Management -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+            <!-- SQL Logging -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
