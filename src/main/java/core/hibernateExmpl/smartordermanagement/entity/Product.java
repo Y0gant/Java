@@ -9,10 +9,8 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "name", nullable = false)
     private String name;
-
     @Column(name = "price", nullable = false)
     private double price;
 
@@ -22,6 +20,15 @@ public class Product {
     public Product(String name, double price) {
         this.name = name;
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
     }
 
     public long getId() {

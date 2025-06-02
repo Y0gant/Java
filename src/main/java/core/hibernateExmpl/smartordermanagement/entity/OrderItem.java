@@ -64,4 +64,13 @@ public class OrderItem {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", product=" + product +
+                '}';
+    }
 }

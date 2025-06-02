@@ -71,4 +71,14 @@ public class Order {
         item.setOrder(this);
         return items.add(item);
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", totalAmount=" + totalAmount +
+                ", orderDate='" + orderDate + '\'' +
+                ", items=" + items +
+                '}';
+    }
 }

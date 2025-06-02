@@ -60,4 +60,14 @@ public class Customer {
         order.setCustomer(this);
         return orders.add(order);
     }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", orders=" + orders +
+                '}';
+    }
 }
