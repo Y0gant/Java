@@ -2,10 +2,10 @@
     <persistence-unit name="my-order-app" transaction-type="RESOURCE_LOCAL">
 
         <!--         Annotated Entity Classes -->
-        <!--        <class>entity.Customer</class>-->
-        <!--        <class>entity.Order</class>-->
-        <!--        <class>entity.Product</class>-->
-        <!--        <class>entity.OrderItem</class>-->
+        <class>core.hibernateExmpl.smartordermanagement.entity.Customer</class>
+        <class>core.hibernateExmpl.smartordermanagement.entity.Order</class>
+        <class>core.hibernateExmpl.smartordermanagement.entity.Product</class>
+        <class>core.hibernateExmpl.smartordermanagement.entity.OrderItem</class>
 
         <!-- Database Connection Properties -->
         <properties>
