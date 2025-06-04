@@ -6,4 +6,7 @@ public interface Vehicle {
 
     public String getDiscount();
 
+    public void setDiscountService(DiscountService service);
+
+
 }

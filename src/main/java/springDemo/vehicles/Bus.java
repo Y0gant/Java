@@ -22,5 +22,10 @@ public class Bus implements Vehicle {
         return this.service.getDiscount();
     }
 
+    @Override
+    public void setDiscountService(DiscountService service) {
+        this.service = service;
+    }
+
 
 }

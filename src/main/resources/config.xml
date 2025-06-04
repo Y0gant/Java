@@ -4,9 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="myVehicle" class="springDemo.vehicles.Car">
-        <constructor-arg ref="discount">
-            
-        </constructor-arg>
+        <!--        <constructor-arg ref="discount">-->
+        <!--            -->
+        <!--        </constructor-arg>-->
+        <property name="discountService" ref="discount"/>
     </bean>
 
     <bean id="discount" class="springDemo.vehicles.FestiveDiscountImpl">
