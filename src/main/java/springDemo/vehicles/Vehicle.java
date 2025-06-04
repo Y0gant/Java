@@ -9,4 +9,7 @@ public interface Vehicle {
     public void setDiscountService(DiscountService service);
 
 
+    String getBrandName();
+
+    double getCarPrice();
 }
