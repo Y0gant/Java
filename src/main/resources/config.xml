@@ -5,7 +5,7 @@
 
     <context:property-placeholder location="vehicle.properties"/>
 
-    <bean id="myVehicle" class="springDemo.vehicles.Car">
+    <bean id="myVehicle" class="springDemo.xmlbased.vehicles.Car" scope="prototype">
         <!--        <constructor-arg ref="discount">-->
         <!--            -->
         <!--        </constructor-arg>-->
@@ -14,7 +14,15 @@
         <property name="mrp" value="${vehicle.mrp}"/>
     </bean>
 
-    <bean id="discount" class="springDemo.vehicles.FestiveDiscountImpl">
+    <bean id="myVehicle2" class="springDemo.xmlbased.vehicles.Bus">
+        <constructor-arg ref="discount">
+
+        </constructor-arg>
+        <property name="brandName" value="Benz"/>
+        <property name="mrp" value="${vehicle.mrp}"/>
+    </bean>
+
+    <bean id="discount" class="springDemo.xmlbased.vehicles.FestiveDiscountImpl">
 
     </bean>
 

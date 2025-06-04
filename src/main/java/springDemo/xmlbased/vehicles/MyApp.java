@@ -1,4 +1,4 @@
-package springDemo.vehicles;
+package springDemo.xmlbased.vehicles;
 
 public class MyApp {
 
