@@ -1,0 +1,17 @@
+package springDemo.annotationbased.vehicles;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class EngineImpl implements Engine {
+    @Override
+    public String start() {
+        System.out.println("Starting engine..");
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            System.out.println("Error at starting engine");
+        }
+        return "Engine has started.....";
+    }
+}
