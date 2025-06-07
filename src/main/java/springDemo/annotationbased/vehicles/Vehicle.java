@@ -10,4 +10,6 @@ public interface Vehicle {
     int increaseGear();
 
     int decreaseGear();
+
+    int getMrp();
 }

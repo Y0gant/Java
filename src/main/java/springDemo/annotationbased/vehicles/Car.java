@@ -1,6 +1,8 @@
 package springDemo.annotationbased.vehicles;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -9,12 +11,20 @@ public class Car implements Vehicle {
     public AirCondn ac;
     //Field injection
     @Autowired
+    //@Qualifier("qualifierName")
     public Transmission transmission;
+    @Value("${vehicle.mrp}")
+    private int mrp;
 
     //Constructor injection
     @Autowired
-    public Car(Engine engine) {
+    public Car(@Qualifier("electricEngine") Engine engine) {
         this.engine = engine;
+    }
+
+    @Override
+    public int getMrp() {
+        return mrp;
     }
 
     @Override
@@ -39,6 +49,7 @@ public class Car implements Vehicle {
 
     //Setter injection
     @Autowired
+    //@Qualifier("qualifierName)
     public void setAc(AirCondn ac) {
         this.ac = ac;
     }

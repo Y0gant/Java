@@ -1,11 +1,11 @@
 package springDemo.annotationbased.vehicles;
 
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class MySpringAppTwo {
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("config2.xml");
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         Vehicle vehicle = context.getBean("car", Vehicle.class);
         System.out.println(vehicle.getMileage());
         System.out.println(vehicle.start());
@@ -16,6 +16,7 @@ public class MySpringAppTwo {
         for (int i = 1; i < 5; i++) {
             System.out.println(vehicle.decreaseGear());
         }
+        System.out.println(vehicle.getMrp());
 
     }
 }
